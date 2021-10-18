@@ -1,5 +1,8 @@
 package tienda;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoCollection;
@@ -10,6 +13,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.types.ObjectId;
 
 public class Main {
 
@@ -37,10 +41,10 @@ public class Main {
         return database;
     }
 
-    public Object crearPedido(String numero) {
+    public Object crearPedido() {
 
-        Pedido pedido = new Pedido(numero);
-        pedidos.insertOne(pedido);
+        Pedido pedido = new Pedido();
+        pedido.setId((new ObjectId()).toString());
         return pedido;
     }
 
@@ -55,8 +59,8 @@ public class Main {
        
         System.out.println("Cliente que quiere el pedido: " + cliente);
         order.setCliente(cliente);
-        System.out.println("Pedido asignado: " + order.getNumero());
-        pedidos.findOneAndReplace(new Document("numero", order.getNumero()), order, new FindOneAndReplaceOptions());
+        System.out.println("Pedido asignado: " + order.getId());
+        pedidos.findOneAndReplace(new Document("numero", order.getId()), order, new FindOneAndReplaceOptions());
 
     }
 
@@ -69,16 +73,51 @@ public class Main {
         return salida.toString();
     }
 
+    public Double calcularMontoPedido( Pedido order )  {
+
+        Double montoTotal = 0.0;
+
+        for (PedidoDetalle item : order.getDetallePedido()) {
+            if (item.getTipo().equals("Internet")) {
+
+                Double customPrice = item.getPrecio() * item.getCantidad() * 0.85;
+                montoTotal += customPrice;
+            }
+            else if (item.getTipo().equals("Promocion")) {
+
+                Double customPrice = item.getPrecio() * item.getCantidad();
+                customPrice -= 20.0;
+                if (customPrice < 0 ) {
+                    customPrice = 0.0;
+                }
+                montoTotal += customPrice;
+            } 
+        }    
+
+        return montoTotal;
+    }
+
     public static void main(String args[])  {
 
         Main m = new Main();
-        String numeroDocumento = "7090901";
-        m.crearCliente( numeroDocumento );
-        Pedido order1 = (Pedido)m.crearPedido("7001");
 
-        
+        Pedido order1 = (Pedido)m.crearPedido();
+        List<PedidoDetalle> items = new ArrayList<PedidoDetalle>();
+        PedidoDetalle oi1 = new PedidoDetalle( "P01010034", 1, 400.90, "Internet");
+        PedidoDetalle oi2 = new PedidoDetalle( "P01010025", 1, 600.90, "Promocion");
+        items.add(oi1);
+        items.add(oi2);
+        order1.setDetallePedido(items);
+        order1.setMontoTotal(m.calcularMontoPedido(order1));
+        System.out.println("Monto pedido: " + order1.getMontoTotal() );
+        m.pedidos.insertOne(order1);
+
+        String numeroDocumento = "70909012";
+        m.crearCliente( numeroDocumento );
         m.asignaClientePedido( order1, numeroDocumento);
 
-        System.out.println( imprimeDatosCliente("7090901", "Gianluca Lapadula", "Calle Roma 720"));
+        System.out.println( imprimeDatosCliente("70909012", "Gianluca Lapadula", "Calle Roma 720"));
+
+        order1.pagarBanco(new BancoMetodoPago());
     }
 }
