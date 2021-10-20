@@ -1,10 +1,18 @@
-package tienda;
+package tienda.models;
 
+import com.fasterxml.uuid.Generators;
 
-public class BlockChainMetodoPago {
+import java.util.UUID;
+
+public class BlockChainMetodoPago extends MetodoPago {
 
     private String walletId;
     private Double comision;
+
+    @Override
+    public  void pagarPedido(Pedido order){
+        walletPayOrder(order);
+    }
 
     public void walletPayOrder(Pedido order){
         
@@ -15,7 +23,8 @@ public class BlockChainMetodoPago {
 
     public String getWalletId() {
         if(this.walletId == null){
-            setWalletId("WI-323232");
+            UUID uuid = Generators.timeBasedGenerator().generate();
+            setWalletId(uuid.toString());
         }
         return walletId;
     }

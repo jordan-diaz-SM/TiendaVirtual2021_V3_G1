@@ -1,11 +1,16 @@
-package tienda;
+package tienda.models;
 
-public class BancoMetodoPago {
+public class BancoMetodoPago extends MetodoPago {
 
     private String bankId;
     private Double comision;
 
-    public void BankPayOrder(Pedido order){
+    @Override
+    public  void pagarPedido(Pedido order){
+        bankPayOrder(order);
+    }
+
+    public void bankPayOrder(Pedido order){
         
         comision = order.getMontoTotal() * 0.15;
         /* Doing Blok Chain Validation */
