@@ -2,7 +2,9 @@ package tienda.controllers.impl;
 
 import tienda.config.Paths;
 import tienda.controllers.OrderController;
+import tienda.models.BancoMetodoPago;
 import tienda.models.BlockChainMetodoPago;
+import tienda.models.Cliente;
 import tienda.models.Pedido;
 import tienda.models.impl.PedidoDetalleInternet;
 import tienda.models.impl.PedidoDetallePromocion;
@@ -51,8 +53,13 @@ public class OrderControllerImpl implements OrderController {
         System.out.println("Precio Total " + order.getMontoTotal()  );
 
         //MetodoPago paymentMethod = new MetodoPago();
-        BlockChainMetodoPago paymentMethod = new BlockChainMetodoPago();
+        //BlockChainMetodoPago paymentMethod = new BlockChainMetodoPago();
+        BancoMetodoPago paymentMethod = new BancoMetodoPago();
         order.pagar(paymentMethod);
+
+        Cliente cliObj = (Cliente)customerRepository.find("616f797ea7539a581e64e7e8");
+        order.setClienteObj( cliObj );
+        System.out.println( cliObj.imprimeDatosCliente() );
 
         orderRepository.create(order);
             
@@ -97,6 +104,3 @@ public class OrderControllerImpl implements OrderController {
 
     }
 }
-        /*Cliente cliObj = (Cliente)customerRepository.find("616e54ffded2a511a948b344");
-        order.setClienteObj( cliObj );
-        System.out.println( cliObj.imprimeDatosCliente() );*/
