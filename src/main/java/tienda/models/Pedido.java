@@ -1,6 +1,8 @@
 package tienda.models;
 
 import java.util.List;
+
+import tienda.models.interfaces.IDescuento;
 import tienda.models.interfaces.IPedidoDetalle;
 
 
@@ -11,8 +13,17 @@ public class Pedido {
     private String cliente;
     private List<IPedidoDetalle> detallePedido;
     private Cliente clienteObj;
+    private Double descuento;
 
     public Pedido() {}
+
+    public Double getDescuento() {
+        return descuento;
+    }
+
+    public void setDescuento(Double descuento) {
+        this.descuento = descuento;
+    }
 
     public Cliente getClienteObj() {
         return clienteObj;
@@ -73,13 +84,19 @@ public class Pedido {
         this.setCliente(cliente);
     }
 
-    public Double calcularMontoPedido() {
+    public Double calcularMontoPedido(IDescuento descuento) {
         List<IPedidoDetalle> detallePedido = this.getDetallePedido();
 
         Double total = 0.0;
 
         for (IPedidoDetalle item : detallePedido) {
             total += item.getPrecio();
+        }
+
+        // Resta el descuento
+        if (descuento != null) {
+            this.descuento = descuento.getDescuento();
+            total = total - this.descuento;
         }
 
         return total;
