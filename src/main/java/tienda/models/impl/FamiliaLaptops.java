@@ -35,7 +35,7 @@ public class FamiliaLaptops implements IFamilia {
         lista = lista +"\n* teclado";
 
         if (categoria != null)  
-        lista = lista +categoria.getFunciones();
+            lista = lista +categoria.getFunciones();
 
         return lista;
     }

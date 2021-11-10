@@ -6,8 +6,10 @@ import tienda.models.BancoMetodoPago;
 import tienda.models.BlockChainMetodoPago;
 import tienda.models.Cliente;
 import tienda.models.Pedido;
+import tienda.models.impl.DescuentoFactory;
 import tienda.models.impl.PedidoDetalleInternet;
 import tienda.models.impl.PedidoDetallePromocion;
+import tienda.models.interfaces.IDescuento;
 import tienda.models.interfaces.IPedidoDetalle;
 import tienda.repositories.ClienteRepositorio;
 import tienda.repositories.PedidoRepositorio;
@@ -48,7 +50,10 @@ public class OrderControllerImpl implements OrderController {
         items.add(oi1);
         items.add(oi2);
         order.setDetallePedido(items);
-        //order.setMontoTotal( order.calcularMontoPedido() );
+
+        DescuentoFactory descuentoFactory = new DescuentoFactory();
+        IDescuento descuento = descuentoFactory.crearDescuento( DescuentoFactory.DESCUENTO_ANIVERSARIO );
+        order.setMontoTotal( order.calcularMontoPedido( descuento ) );
 
         System.out.println("Precio Total " + order.getMontoTotal()  );
 

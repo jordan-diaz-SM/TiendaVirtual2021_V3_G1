@@ -85,6 +85,21 @@ public class ProductControllerImpl implements ProductController {
     @Override
     public void loadProducts(Context context) {
 
+        IProductoFactory abstractFactory = new GamaBajaFactory();
+        String lineaGB = abstractFactory.getLineaProducto().getLinea();
+        String mantenimientoGB = abstractFactory.getMantenimiento().getPeriodo();
+
+        Producto pr1 = new Producto( "P200201", "Nokia", 1400.00, lineaGB, mantenimientoGB );
+        pr1.setFamilia( new FamiliaCelulares() );
+        productRepository.create(pr1);
+
+        abstractFactory = new GamaAltaFactory();
+        String lineaGA = abstractFactory.getLineaProducto().getLinea();
+        String mantenimientoGA = abstractFactory.getMantenimiento().getPeriodo();
+
+        Producto pr2 = new Producto( "P200202", "Iphone", 3400.00, lineaGA, mantenimientoGA );
+        pr2.setFamilia( new FamiliaCelulares( new CategoriaTrabajo() ) );
+        productRepository.create(pr2);
 
     }
     
