@@ -85,26 +85,6 @@ public class ProductControllerImpl implements ProductController {
     @Override
     public void loadProducts(Context context) {
 
-        IProductoFactory factoryProduct = new GamaAltaFactory();
-        String lineaA = factoryProduct.getLineaProducto().getLinea();
-        String mantenimientoA = factoryProduct.getMantenimiento().getPeriodo();
-
-        factoryProduct = new GamaBajaFactory();
-        String lineaB = factoryProduct.getLineaProducto().getLinea();
-        String mantenimientoB = factoryProduct.getMantenimiento().getPeriodo();
-
-        Producto pr1 = new Producto("P01010016","Samsung S10", 2500.00, lineaA, mantenimientoA);
-
-        pr1.setFamilia( new FamiliaCelulares( new CategoriaTrabajo()) );
-        System.out.println( pr1.getFamilia().getNombre() );
-        System.out.println( pr1.getFamilia().getEspecificaciones() );
-                
-        productRepository.create(pr1);
-        Producto pr2 = new Producto("P01010017","Samsung A10", 1000.00, lineaB, mantenimientoB);
-        productRepository.create(pr2);
-        //Producto pr3 = new Producto("P01010018","Samsung S20", 3000.00, lineaA, mantenimientoA);
-        //productRepository.create(pr3);
-
 
     }
     
