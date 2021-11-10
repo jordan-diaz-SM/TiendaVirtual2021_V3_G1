@@ -48,7 +48,7 @@ public class OrderControllerImpl implements OrderController {
         items.add(oi1);
         items.add(oi2);
         order.setDetallePedido(items);
-        order.setMontoTotal( order.calcularMontoPedido() );
+        //order.setMontoTotal( order.calcularMontoPedido() );
 
         System.out.println("Precio Total " + order.getMontoTotal()  );
 

@@ -9,14 +9,17 @@ import io.swagger.v3.oas.models.info.Info;
 import tienda.config.DBConnectionManager;
 import tienda.controllers.impl.CustomerControllerImpl;
 import tienda.controllers.impl.OrderControllerImpl;
+import tienda.controllers.impl.ProductControllerImpl;
 import tienda.repositories.impl.ClienteRepositorioImpl;
 import tienda.repositories.impl.PedidoRepositorioImpl;
+import tienda.repositories.impl.ProductoRepositorioImpl;
 
 public class Main {
 
     private final DBConnectionManager manager;
     private final CustomerControllerImpl customerController;
     private final OrderControllerImpl orderController;
+    private final ProductControllerImpl productController;
 
     public Main() {
         this.manager = new DBConnectionManager();
@@ -27,6 +30,8 @@ public class Main {
         PedidoRepositorioImpl orderRepositoryImpl = new PedidoRepositorioImpl(this.manager.getDatabase());
         this.orderController = new OrderControllerImpl(orderRepositoryImpl, customerRepositoryImpl);
 
+        ProductoRepositorioImpl productRepositoryImpl = new ProductoRepositorioImpl(this.manager.getDatabase()); 
+        this.productController = new ProductControllerImpl(productRepositoryImpl);
     }
 
     public void startup() {
@@ -52,6 +57,12 @@ public class Main {
         server.get("api/orders", this.orderController::findAll);
         server.post("api/order", this.orderController::create);
 
+        server.get("api/product/:id", this.productController::find);
+        server.delete("api/product/:id", this.productController::delete);
+        server.get("api/products", this.productController::findAll);
+        server.post("api/product", this.productController::create);
+        server.post("api/loadProducts", this.productController::loadProducts);
+        
         //server.post("api/order/pay/:id", this.orderController::pay);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
