@@ -7,6 +7,7 @@ import tienda.models.BlockChainMetodoPago;
 import tienda.models.Cliente;
 import tienda.models.Pedido;
 import tienda.models.impl.DescuentoFactory;
+import tienda.models.impl.PedidoCreado;
 import tienda.models.impl.PedidoDetalleInternet;
 import tienda.models.impl.PedidoDetallePromocion;
 import tienda.models.interfaces.IDescuento;
@@ -51,25 +52,24 @@ public class OrderControllerImpl implements OrderController {
         items.add(oi2);
         order.setDetallePedido(items);
 
-        DescuentoFactory descuentoFactory = new DescuentoFactory();
-        IDescuento descuento = descuentoFactory.crearDescuento( DescuentoFactory.DESCUENTO_ANIVERSARIO );
-        order.setMontoTotal( order.calcularMontoPedido( descuento ) );
-
-        System.out.println("Precio Total " + order.getMontoTotal()  );
-
-        //MetodoPago paymentMethod = new MetodoPago();
-        //BlockChainMetodoPago paymentMethod = new BlockChainMetodoPago();
-        BancoMetodoPago paymentMethod = new BancoMetodoPago();
-        order.pagar(paymentMethod);
+        order.setEstadoPedido( new PedidoCreado() );
+        order.procesar();
 
         Cliente cliObj = (Cliente)customerRepository.find("616f797ea7539a581e64e7e8");
         order.setClienteObj( cliObj );
         System.out.println( cliObj.imprimeDatosCliente() );
 
         orderRepository.create(order);
-            
+        //String idO = order.getId().toString(); 
         context.status(HttpStatus.CREATED_201)
                 .header(HttpHeader.LOCATION.name(), Paths.formatPostLocation(order.getId().toString()));
+
+        order.procesar();
+        
+        order.procesar();
+
+        order.procesar();
+
 
     }
 

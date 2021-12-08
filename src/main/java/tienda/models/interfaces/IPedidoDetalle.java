@@ -14,4 +14,6 @@ public interface IPedidoDetalle {
 
     public Double getPrecio();
 
+    public String getIdProduct();
+
 }
