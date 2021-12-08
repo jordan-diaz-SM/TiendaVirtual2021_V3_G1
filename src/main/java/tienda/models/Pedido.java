@@ -2,15 +2,14 @@ package tienda.models;
 
 import java.util.List;
 
-import tienda.models.impl.DetallePedidoCollection;
 import tienda.models.impl.DetallePedidoIterator;
 import tienda.models.interfaces.IDescuento;
 import tienda.models.interfaces.IDetallePedidoIterator;
 import tienda.models.interfaces.IEstadoPedido;
 import tienda.models.interfaces.IPedidoDetalle;
+import tienda.models.interfaces.IDetallePedidoCollection;
 
-
-public class Pedido implements DetallePedidoCollection {
+public class Pedido implements IDetallePedidoCollection {
     private String id;
     private Double montoTotal;
     private String direccionEntrega;
